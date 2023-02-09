@@ -102,12 +102,15 @@ function handlePlace(closepost){ // from touch: toPost, p2, second post touched
   }
 
   // paint that same state
+  flags.selectedPost = -1; //todo is there a better way?
   paint();
 };
 function handleDeal(closebatt){ // from touch, last, or toPost
   // copy and slice for any "undo-s" = undoCount
   const gamestatesLocal = JSON.parse(localStorage.getItem('gamestates'));
   const gamestates = gamestatesLocal.slice(0, gamestatesLocal.length - flags.undoCount);
+  //
+  if (gamestates.at(-1).batts[closebatt].length < 1) return
   // with action (place or deal), game state is saved as new branch
   localStorage.setItem('gamestates', JSON.stringify(gamestates));
   flags.undoCount = 0;
