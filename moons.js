@@ -37,7 +37,8 @@ function genericStyle(fillcolor, linecolor, linewidth) {
 
 function ringstyle(ctx, ring, post) {
   let index = post.rings.findLastIndex((e) => e.code === ring.code);
-  let ringthick = 4 + 2 * (1/2) ** (post.rings.length - index);
+  let ringthick = (ring === post.top) ? 6 : 3;
+  // 4 + 2 * (1/2) ** (post.rings.length - index); //post.ord === flags.selectedPost &&
   return genericStyle(...[
     rgbaString([0,0,0],0.25),//(ring === post.top) ? rgbaString[[0,0,0],0.3] : "black", //fillcolor
     suitlinecode[ring.suit], //linecolor
@@ -47,6 +48,9 @@ function ringstyle(ctx, ring, post) {
     ]
   );
 }
+
+
+
 const linefillstyle = (ctx, ring) => genericStyle(...[ // style(fillcolor, linecolor, linewidth)
     rgbaString([0,0,0],0.7), //darksuitfillcode[ring.color],
     suitlinecode[ring.suit],

@@ -70,6 +70,11 @@ function paint() {
 
 
 
+
+
+
+
+
   /////////////
   //
   //    paint commands
@@ -77,8 +82,10 @@ function paint() {
   ////
 
 
-  // higlight ring on selection
-  if ([0,1,2,3,4,5,6,7,8,9].includes(flags.selectedPost)) ringHighlight(posts[flags.selectedPost]);
+
+  //
+  // paint undo button
+  undoColor(undoloc); //(postIdx)
   //
   for (let post of posts) {
     postPaint(post);
@@ -86,12 +93,24 @@ function paint() {
   for (let post of batterys) {
     batteryPaint(post);
   }
-  // paint undo button
-  undoColor(undoloc); //(postIdx)
+  // higlight ring on selection
+  if ([0,1,2,3,4,5,6,7,8,9].includes(flags.selectedPost)) {
+    //ringHighlight(posts[flags.selectedPost]);
+    animate(ctx, rabbits(posts[flags.selectedPost]));
+    //rabbits(posts[flags.selectedPost]).forEach((stamp,i) => animate(ctx, stamp));
+  }
+
 
 
   //animate(ctx, moonstrip); // plays moonstrip
   //flip(ctx, moonstrip); // flip(ctx, moonstrip, loops=1, frame=0)
+
+
+
+
+
+
+
 
 
 
@@ -101,6 +120,7 @@ function paint() {
     const scale = w/6/14;
     const [x,y] = postlocs[post.id];
 
+    if (post.id !== flags.selectedPost) {
     for (let ring of post.rings) {
       let radiuso = ring.rank * scale;
       let radiusi = 0; //(ring.rank < 5);// ? 0 : 3 * scale; // 3-ring is size of num-ring
@@ -123,7 +143,7 @@ function paint() {
         style: ringstyle(ctx, ring, post), //rgbaString([10,10,10], a=0.2)
         text: {
           msg: (ring === post.top) ? ring.rank : "",  //textpips.chinese[ring.rank] : "",
-          pt: "64px ", font: "myFont",
+          pt: "32px ", font: "myFont",
           textAlign: "center" || "right",
           textBaseline: "middle" || "alphabetic" || "top",
           color: suitlinecode[ring.suit],
@@ -141,7 +161,7 @@ function paint() {
 
       moons.push([moon,moonhole,linedmoon]);
     }
-
+    }
     for (let [moon, moonhole, linepip] of moons) {
       ctx.save();
       stencil(moonhole, ctx);
@@ -149,36 +169,58 @@ function paint() {
       ctx.restore();
       stomp(moon, ctx);
     }
+  } // end of postPaint
 
-/*
+  function rabbits(post) {
     const rabbits = [];
-    //const ups = posts.rings.filter((e) => e.)
-    for (let ring of post.rings) {
-      let rabbit = { // this is a stamp
-        x: x, //centerd +
-        y: y, //so to put the text in the fn middle
-        theta: 0,
-        scale: {x:1, y:1},
-        text: {
-          msg: "" + ring.rank,
-          pt: "16px ", font: "myFont",
-          textAlign: "center" || "right",
-          textBaseline: "middle" || "alphabetic" || "top",
-          color: suitlinecode[ring.suit],
-          x: 0, y: ring.rank * scale,
-        },
-      };
-//      if (ring.up && ring.rings) rabbits.push(rabbit);
+    const scale = w/6/14;
+    const [x,y] = loclocs[post.id];
+    if (post.rings.length > 0) {
+      post.rings.forEach((ring,i) => {
+        let moon = { // this is a stamp
+          x: x, //centerd +
+          y: y + i * 2.2 * scale,
+          theta: 0, //Math.random()*3.14, //todo
+          scale: {x:1, y:1},
+          path: circlePath(ring.rank * scale),
+          style: ringstyle(ctx, ring, post), //rgbaString([10,10,10], a=0.2)
+          text: {
+            msg: ring.rank, //(ring === post.top) ? ring.rank : "",  //textpips.chinese[ring.rank] : "",
+            pt: "32px ", font: "myFont",
+            textAlign: "center" || "right",
+            textBaseline: "middle" || "alphabetic" || "top",
+            color: suitlinecode[ring.suit],
+            x: 0, y: 0,
+          }
+        };
+        let rabbit = { // this is a stamp
+          x: x, //centerd +
+          y: y, //so to put the text in the fn middle
+          theta: 0,
+          scale: {x:1, y:1},
+          path: false,
+          style: false,
+          text: {
+            msg: "" + ring.rank,
+            pt: "32px ", font: "myFont",
+            textAlign: "center" || "right",
+            textBaseline: "middle" || "alphabetic" || "top",
+            color: suitlinecode[ring.suit],
+            x: w/12, //ring.rank * scale || 0,
+            y: (post.rings.length - i - 1) * 3 * scale,
+          },
+        };
+        rabbits.push(moon); //if (ring.up && ring.rings) rabbits.push(rabbit);
+      });
     }
+    /*
     for (let txt of rabbits) {
-      //stomp(moon, ctx);
-      typetap(txt, ctx);
+      stomp(txt, ctx);
+      //typetap(txt, ctx);
     }
     */
-
-    //animate(ctx, moons);
-
-  } // end of postPaint
+    return rabbits
+  } // end of rabbits
 
 
   // batterys
@@ -243,7 +285,23 @@ function paint() {
       theta: 0, //Math.random()*3.14, //todo
       scale: {x:1, y:1},
       path: circlePath(radiuso),
-      style: genericStyle(undefined, suitlinecode[actionsuit], 2),
+      style: {
+        gradient: false,
+        line: {
+          width: 2,
+          cap: "round" || "butt" || "square" ,
+          join:  "round" || "miter" || "bevel",
+          color: suitlinecode[actionsuit],
+          dash: [], // [] for none
+          dashOffset: 0, // 0 for none
+        },//*/
+        fill:
+          //{fillStyle: fillcolor,},
+          false,
+        shadow:
+          //{shadowColor: fillcolor, shadowOffsetX: 0, shadowOffsetY: 0, shadowBlur: 16,},
+          false,
+        },
       text: {
         msg: "⟲",
         pt: "60px ", font: "myFont",
