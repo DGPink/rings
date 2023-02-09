@@ -17,13 +17,23 @@ function closestPost(touch){
 
 function handlePost(numberClosestPost, distance) {
   // returns label this selected, a number
-  if (flags.selectedPost === numberClosestPost) {return -1} // deselect if same
+  if (flags.selectedPost === numberClosestPost) {
+    return -1;
+  } // deselect if same
   if ([0,1,2,3,4,5,6,7,8,9].includes(numberClosestPost)) {
-    if (flags.selectedPost === -1) {return numberClosestPost} // select if no selection
+    if (flags.selectedPost === -1) {
+      return numberClosestPost;
+    } // select if no selection
     handlePlace(numberClosestPost);
   }
-  if ([10,11,13,14,15].includes(numberClosestPost)) handleDeal([10,11,13,14,15].indexOf(numberClosestPost)) // matches to batts[i]
-  if ([12].includes(numberClosestPost)) handleUndo(distance) //
+  if ([10,11,13,14,15].includes(numberClosestPost)) { // matches to batts[i]
+    if (![0,1,2,3,4,5,6,7,8,9].includes(flags.selectedPost)){
+      handleDeal([10,11,13,14,15].indexOf(numberClosestPost));
+    }
+  }
+  if ([12].includes(numberClosestPost)) {
+    handleUndo(distance);
+  }
   return -1; // flags.selectedPost is set to -1, (no selection)
 }
 
