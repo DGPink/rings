@@ -47,30 +47,36 @@ function stomp(stamp, ctx) {
   ctx.rotate(stamp.theta);
   ctx.scale(stamp.scale.x,stamp.scale.y); //80,80
 
-  if (stamp.style.gradient){
-    console.log("ned gad mad");// todo: ctx.createLinearGradient();
-  };
-  if (stamp.style.shadow){
-    //console.log("shad mad");
-    for (let [typ,sty] of Object.entries(stamp.style.shadow)) {
-      ctx[typ] = sty;
-    }
-  };
-  if (stamp.style.line){
-    ctx.lineWidth = stamp.style.line.width; // Nb: pixelminutes
-    ctx.lineCap = stamp.style.line.cap;
-    ctx.strokeStyle = stamp.style.line.color;
-    //ctx.stroke-opacity="1";
-    ctx.lineJoin = stamp.style.line.join;
-    //ctx.miterLimit = stamp.style.line.miterLimit;
-    ctx.setLineDash(stamp.style.line.dash);
-    ctx.lineDashOffset = stamp.style.line.dashOffset;
-    ctx.stroke(path);
-  };
-  if (stamp.style.fill){
-    ctx.fillStyle = stamp.style.fill.fillStyle;
-    ctx.fill(path);
-  };
+  if (stamp.img) {
+    ctx.drawImage(stamp.img, 0, 0);
+  }
+  if (stamp.style) {
+    if (stamp.style.gradient){
+      console.log("ned gad mad");// todo: ctx.createLinearGradient();
+    };
+    if (stamp.style.shadow){
+      //console.log("shad mad");
+      for (let [typ,sty] of Object.entries(stamp.style.shadow)) {
+        ctx[typ] = sty;
+      }
+    };
+    if (stamp.style.line){
+      ctx.lineWidth = stamp.style.line.width; // Nb: pixelminutes
+      ctx.lineCap = stamp.style.line.cap;
+      ctx.strokeStyle = stamp.style.line.color;
+      //ctx.stroke-opacity="1";
+      ctx.lineJoin = stamp.style.line.join;
+      //ctx.miterLimit = stamp.style.line.miterLimit;
+      ctx.setLineDash(stamp.style.line.dash);
+      ctx.lineDashOffset = stamp.style.line.dashOffset;
+      ctx.stroke(path);
+    };
+    if (stamp.style.fill){
+      ctx.fillStyle = stamp.style.fill.fillStyle;
+      ctx.fill(path);
+    };
+  }
+
   if (stamp.text){
     //ctx.setTransform(1, 0, 0, 1, 0, 0); // todo:
     ctx.fillStyle = stamp.text.color;
@@ -79,6 +85,7 @@ function stomp(stamp, ctx) {
     ctx.textBaseline = stamp.text.textBaseline; //"middle" || "alphabetic" || "top";
     ctx.fillText(stamp.text.msg, stamp.text.x, stamp.text.y);
   };
+
   ctx.setTransform(1, 0, 0, 1, 0, 0);
 } // end of stomp
 
@@ -108,9 +115,9 @@ function stencil(stamp, ctx) {
   ctx.rotate(stamp.theta);
   ctx.scale(stamp.scale.x,stamp.scale.y); //80,80
 
-  //ctx.save();
+  //ctx.save(); // do in caller
   ctx.clip(new Path2D(stamp.path));
-  //ctx.restore();
+  //ctx.restore(); // do in calling function
 
   //ctx.setTransform(1, 0, 0, 1, 0, 0);
 } // end of stencil

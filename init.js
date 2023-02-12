@@ -18,5 +18,6 @@ async function loadFonts() {
 function init(){
   canvasInit();
   logicInit();
+  //paintInit();
   touchSetup();
 }

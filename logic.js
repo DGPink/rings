@@ -12,7 +12,7 @@
 //var posts; // still called by paint, //todo
 const flags = {
   selectedPost: -1,
-  undoCount: 0,
+  undoCount: 0, //todo some must be in gamestateflags // bug: can undo crown, but not zslot count
   nextZslot: 0,
   score: 0,
   autocrown: true,
@@ -127,8 +127,8 @@ function handleUndo(distance){ // from touch, last, or toPost
   const gamestates = JSON.parse(localStorage.getItem('gamestates'));
   if (gamestates.length > flags.undoCount + 1) {
     flags.undoCount++;
-    console.log(gamestates);
-    console.log(-flags.undoCount - 1);
+    //console.log(gamestates);
+    //console.log(-flags.undoCount - 1);
     paint(); // gamestates.at(-flags.undoCount - 1)
   }
 };
@@ -175,6 +175,7 @@ function logicInit() {
       }
   );
   console.log(rings);
+  paintInit(rings);
 
   // make initial game state: place rings on posts and batts
   const gamestateInitial = {

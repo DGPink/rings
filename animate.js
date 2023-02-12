@@ -10,9 +10,12 @@ function animate(ctx, moonstrip, loops=1, frame=0){
   //
 
   const resetBackground = false; // background; //"#112222"; //false;
-  loop();
 
+  if (moonstrip.length > 0) {
+    loop();
+  };
 
+//ctx.drawImage(ringImages[ring.code], x - ring.rank*scale, y - ring.rank*scale)
   // plays (stomp()) moonstrip until end of loops, end of strip
   function flipper(){
     let done = true; //asserts true

@@ -36,8 +36,8 @@ function genericStyle(fillcolor, linecolor, linewidth) {
 } // end of genericStyle
 
 function ringstyle(ctx, ring, post) {
-  let index = post.rings.findLastIndex((e) => e.code === ring.code);
-  let ringthick = (ring === post.top) ? 6 : 3;
+  //let index = post.rings.findLastIndex((e) => e.code === ring.code);
+  let ringthick =  3; //(ring === post.top) ? 6 : 3;
   // 4 + 2 * (1/2) ** (post.rings.length - index); //post.ord === flags.selectedPost &&
   return genericStyle(...[
     rgbaString([0,0,0],0.25),//(ring === post.top) ? rgbaString[[0,0,0],0.3] : "black", //fillcolor
@@ -48,18 +48,26 @@ function ringstyle(ctx, ring, post) {
     ]
   );
 }
+const thinringstyle = (ctx, ring) => genericStyle(...[
+    rgbaString([0,0,0],0.3), // fill,
+    suitlinecode[ring.suit], // line
+    1,
+]);
 
-
-
+const polygonstyle = (ctx, ring) => genericStyle(...[
+    rgbaString([0,0,0],0.3), //darksuitfillcode[ring.color],
+    suitlinecode[ring.suit],
+    3,
+]);
 const linefillstyle = (ctx, ring) => genericStyle(...[ // style(fillcolor, linecolor, linewidth)
     rgbaString([0,0,0],0.7), //darksuitfillcode[ring.color],
     suitlinecode[ring.suit],
     1,
 ]);
 const pipstyle = (ctx, ring) => genericStyle(...[
-    rgbaString([0,0,0],0), //darksuitfillcode[ring.color],
+    rgbaString([0,0,0],0.3), //darksuitfillcode[ring.color],
     suitlinecode[ring.suit],
-    1,
+    2,
 ]);
 const batterystyle = (ctx, ring) => genericStyle(...[
   rgbaString([0,0,0],0), //"#111", //fillcolor
@@ -83,29 +91,33 @@ const circlePath = (ro,ri) => {
   return path
 }
 
-function linefillpath(ctx, ring, scale) {
-  //const scale = w/6/14;
-  const whth = 2 * ring.rank * scale;
-  const radiuso = ring.rank * scale;
-
+function polygonPath(ctx, whth, radiuso, rank) { // //(ctx, ring, scale)
   const pippath = new Path2D();
-
-  // angle raiate
-  [...Array(ring.rank)].forEach((e,i) => {
-    let pha = Math.random()*2*Math.PI;
-    let pho = Math.random()*2*Math.PI;
-    pippath.moveTo(Math.cos(pha) * whth/2 + whth/2, Math.sin(pha) * whth/2 + whth/2);
-    pippath.lineTo(Math.cos(pho) * whth/2 + whth/2, Math.sin(pho) * whth/2 + whth/2);
-  });
+  if ( rank < 2 ) {
+    return pippath
+  }
+  pippath.moveTo (whth/2 + radiuso * Math.cos(0), whth/2 +  radiuso *  Math.sin(0));
+  for (var i = 1; i < rank; i += 1) {
+    let pha = 2*Math.PI * i/rank;
+    pippath.lineTo (whth/2 + radiuso * Math.cos(pha), whth/2 + radiuso * Math.sin(pha));
+  }
+  pippath.closePath();
 
   return pippath //pattern;
-} // end of linefillpath
 
-function linefill_pathz(ctx, ring, scale=w/6/14) {
-  const whth = 2 * ring.rank * scale;
-  let radiuso = ring.rank * scale;
+} // end of polygonPath
 
+function linefillpath(ctx, whth, radiuso, rank) { // //(ctx, ring, scale)
   const pippath = new Path2D();
+/*
+  // angle raiate
+  [...Array(rank)].forEach((e,i) => {
+    let pha = Math.random()*2*Math.PI;
+    let pho = Math.random()*2*Math.PI;
+    pippath.moveTo(Math.cos(pha) * radiuso + whth/2, Math.sin(pha) * radiuso + whth/2);
+    pippath.lineTo(Math.cos(pho) * radiuso + whth/2, Math.sin(pho) * radiuso + whth/2);
+  });
+
 
 
   // angle raiate
@@ -115,13 +127,13 @@ function linefill_pathz(ctx, ring, scale=w/6/14) {
     pippath.moveTo(Math.cos(pha) * whth/2 + whth/2, Math.sin(pha) * whth/2 + whth/2);
     pippath.lineTo(Math.cos(pho) * whth/2 + whth/2, Math.sin(pho) * whth/2 + whth/2);
   });
-/*
+
   [...Array(ring.rank)].forEach((e,i) => {
     pippath.moveTo(0, i/ring.rank * whth);
     pippath.lineTo(whth, i/ring.rank * whth);
   });
-
-  let [verts,hortz] = vertshortz[ring.rank];
+*/
+  let [verts,hortz] = vertshortz[rank];
   verts.map((e,i,r) => e * whth * i/(r.length-1))
     .filter(q => (q>0))
     .forEach(x => {
@@ -134,9 +146,9 @@ function linefill_pathz(ctx, ring, scale=w/6/14) {
       pippath.moveTo(0, y);
       pippath.lineTo(whth, y);
     });
-*/
+
   return pippath //pattern;
-} // end of linefill_pathz
+} // end of linefill_path
 
 /////////////////
 ///
