@@ -78,7 +78,8 @@ const yellow = "#fa3";
 const blue = "#5af";
 const green = "#3b3";
 
-const suitlinecode = {"♥":"#e6a","♦":"#fa3","♣":"#5af","♠":"#3b3","⊚":"#111","⊝":"gray"};
+// todo we need to change blue, or green, too hard to differntiate
+const suitlinecode = {"♥":"#e6a","♦":"#fa3","♣":"#68f","♠":"#3b3","⊚":"#111","⊝":"gray"};
 const suitfillcode = {"♥":"#e6a","♦":"#fa3","♣":"#5af","♠":"#3b3","⊚":"white","⊝":"gray"};
 const darksuitfillcode = {"♥":"#c48","♦":"#d81","♣":"#38d","♠":"#191","⊚":"#222","⊝":"gray"};
 //const suitcode = {"♥":"#e6a","♦":"#fa3","♣":"#3b3","♠":"#5af","⊚":"black","⊝":"gray"};

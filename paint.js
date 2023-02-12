@@ -1,4 +1,8 @@
 
+
+
+const ringImages = {};
+const textRingImages = {};
 ///////////////////////////////////////////////////////////////////////////////
 
 //       PAINT                       ////////////////////////////
@@ -21,7 +25,7 @@ function hexiful(radius, center, offset) {
       // j = row + a half circle for the center column only + any initial offset
     )
   ).flat(2);
-}
+};
 
 function canvasInit() {
   // initiate canvas
@@ -31,7 +35,243 @@ function canvasInit() {
   ctx.canvas.height = 2 * 1080; // screen.width; //screen.height; //todo
   // save post locations to canvas for later retrieve by "touch"
   canvas.loclocs = hexiful(canvas.width/6, canvas.width/2, canvas.width/6);
+  canvas.scale = canvas.width/6/14 // one rad 14 ring is rad w/6 on screen = screen is 3 rings wide
+};
+
+function paintInit(rings) {
+  for (let ring of rings) {
+    ringImages[ring.code] = ringPaint(ring);
+    textRingImages[ring.code] = polygonPaint(ring);
+  }
 }
+//*
+
+function squarepattern(pip, pipsize, gap){ //pip pattern-maker
+  const canvas = new OffscreenCanvas(pipsize+gap, pipsize+gap);
+  const ctx = canvas.getContext('2d', {alpha: true});
+
+  stomp(pip, ctx);
+  //typetap(txt, ctx);
+
+  return ctx.createPattern(canvas, "repeat") // ctx.createPattern(canva, "repeat"); //canvas;
+} // end of squarepattern
+
+// STARS
+//
+function stars(ring){ //pip pattern-maker
+  // initiate canvas
+  const scale = document.getElementById('canvas').scale; //canvas.width/6/14;
+  const whth = 2 * ring.rank * scale + 2;
+  const canvas = new OffscreenCanvas(whth, whth);
+  const ctx = canvas.getContext('2d', {alpha: true});
+  const moons = [];
+
+  const [x,y] = [whth/2, whth/2];
+  let radiuso = ring.rank * scale;
+  let radiusi = 0;
+/*
+  const pippattern = { // this is a stamp
+    x: 0,
+    y: 0,
+    theta: 0, //Math.random()*3.14, //todo
+    scale: {x:ring.rank/200, y:ring.rank/200}, //{x:0.02, y:0.02},
+    path: suitpathcode[ring.suit],
+    style: pipstyle(ctx, ring), //rgbaString([10,10,10], a=0.2)
+  };
+  */
+  let piptext = { // this is a stamp
+    x: 0,
+    y: 0,
+    theta: 0, //Math.random()*3.14, //todo
+    scale: {x:1, y:1},
+    //path: circlePath(radiuso, radiusi),
+    //style: ringstyle(ctx, ring), //rgbaString([10,10,10], a=0.2)
+    text: {
+      msg: "" + ring.suit,
+      pt: "12px ", font: "myFont",
+      textAlign: "center" || "right",
+      textBaseline: "middle" || "alphabetic" || "top",
+      color: suitlinecode[ring.suit],
+      x: 6, //ring.rank * scale || 0,
+      y: 6,
+    },
+  };
+
+  ctx.fillStyle = squarepattern(piptext, 12, 12);
+  ctx.fillRect(0,0,canvas.width,canvas.height);
+
+
+//  for (let i=0; i<9; i++)(let j=0; j<9; j++){
+//  }
+/*
+    moons.push([moon, piptext]);
+    for (let [moon,txt] of moons) {
+      stomp(moon, ctx);
+      //typetap(txt, ctx);
+    }
+*/
+
+    //ctx.save(); // do in caller
+    //ctx.clip(new Path2D(stamp.path));
+    //ctx.restore(); // do in calling function
+    //stomp(moon, ct);
+
+  return canvas;
+  //return ctx.createPattern(canvas, "repeat")
+} // end of stars
+//*/
+
+function polygonPaint(ring){
+  // initiate canvas
+  const scale = document.getElementById('canvas').scale; //canvas.width/6/14;
+  const whth = 2 * ring.rank * scale + 2;
+  const canvas = new OffscreenCanvas(whth, whth);
+  const ctx = canvas.getContext('2d', {alpha: true});
+  const moons = [];
+
+  const [x,y] = [whth/2, whth/2];
+  let radiuso = ring.rank * scale;
+  let radiusi = 0; //(ring.rank < 5);// ? 0 : 3 * scale; // 3-ring is size of num-ring
+
+  const polygonmoon = { // this is a stamp
+    x: 0,
+    y: 0,
+    theta: 0, //Math.random()*3.14, //todo
+    scale: {x:1, y:1},
+    path: polygonPath(ctx, whth, radiuso, ring.rank),
+    style: polygonstyle(ctx, ring), //rgbaString([10,10,10], a=0.2)
+  };
+  let pipfill = { // this is a stamp
+    x: 0,
+    y: 0,
+    theta: 0, //Math.random()*3.14, //todo
+    scale: {x:1, y:1},
+    img: stars(ring),
+  };
+  let moon = { // this is a stamp
+    x: x,
+    y: y,
+    theta: 0, //Math.random()*3.14, //todo
+    scale: {x:1, y:1},
+    path: circlePath(radiuso, radiusi),
+    style: thinringstyle(ctx, ring), //rgbaString([10,10,10], a=0.2)
+  };
+  let texto = { // this is a stamp
+    x: x,
+    y: y,
+    theta: 0, //Math.random()*3.14, //todo
+    scale: {x:1, y:1},
+    //path: circlePath(radiuso, radiusi),
+    //style: ringstyle(ctx, ring), //rgbaString([10,10,10], a=0.2)
+    text: {
+      msg: "" + ring.rank,
+      pt: "32px ", font: "myFont",
+      textAlign: "center" || "right",
+      textBaseline: "middle" || "alphabetic" || "top",
+      color: suitlinecode[ring.suit],
+      x: 0, //ring.rank * scale || 0,
+      y: 0,
+    },
+  };
+
+  stomp(polygonmoon, ctx);
+  ctx.save(); // do in caller
+  stencil(polygonmoon, ctx);
+  stomp(pipfill, ctx);
+  ctx.restore(); // do in calling function
+  stomp(moon, ctx);
+  stomp(texto, ctx);
+
+  return canvas;
+
+} // end of polygonPaint
+
+function ringPaint(ring){
+  // initiate canvas
+  const scale = document.getElementById('canvas').scale; //canvas.width/6/14;
+  const whth = 2 * (ring.rank * scale + 2);
+  const canvas = new OffscreenCanvas(whth, whth);
+  const ctx = canvas.getContext('2d', {alpha: true});
+  const moons = [];
+
+  const [x,y] = [whth/2, whth/2];
+  let radiuso = ring.rank * scale;
+  let radiusi = 0; //(ring.rank < 5);// ? 0 : 3 * scale; // 3-ring is size of num-ring
+
+  const linedmoon = { // this is a stamp
+    x: 0,
+    y: 0,
+    theta: 0, //Math.random()*3.14, //todo
+    scale: {x:1, y:1},
+    path: polygonPath(ctx, whth, radiuso, ring.rank),
+    style: pipstyle(ctx, ring), //rgbaString([10,10,10], a=0.2)
+  };
+
+  let moon = { // this is a stamp
+    x: x,
+    y: y,
+    theta: 0, //Math.random()*3.14, //todo
+    scale: {x:1, y:1},
+    path: circlePath(radiuso, radiusi),
+    style: ringstyle(ctx, ring), //rgbaString([10,10,10], a=0.2)
+    /*
+    text: {
+      msg: (ring === post.top) ? ring.rank : "",  //textpips.chinese[ring.rank] : "",
+      pt: "32px ", font: "myFont",
+      textAlign: "center" || "right",
+      textBaseline: "middle" || "alphabetic" || "top",
+      color: suitlinecode[ring.suit],
+      x: 0, y: 2,
+    }
+    */
+  };
+
+  let moonhole = { // this is a stamp
+    x: x,
+    y: y,
+    theta: 0, //Math.random()*3.14, //todo
+    scale: {x:1, y:1},
+    path: circlePath(radiuso, radiusi),
+  };
+  let texto = { // this is a stamp
+    x: x,
+    y: y,
+    theta: 0, //Math.random()*3.14, //todo
+    scale: {x:1, y:1},
+    path: circlePath(radiuso, radiusi),
+    style: ringstyle(ctx, ring), //rgbaString([10,10,10], a=0.2)
+    text: {
+      msg: "" + ring.rank,
+      pt: "32px ", font: "myFont",
+      textAlign: "center" || "right",
+      textBaseline: "middle" || "alphabetic" || "top",
+      color: suitlinecode[ring.suit],
+      x: 0, //ring.rank * scale || 0,
+      y: 0,
+    },
+  };
+
+  moons.push([moon,moonhole,linedmoon]);
+
+
+  for (let [moon, moonhole, linepip] of moons) {
+    //ctx.save();
+    //stencil(moonhole, ctx);
+    stomp(moon, ctx);
+    //stomp(linepip, ctx);
+    //ctx.restore();
+
+  }
+
+  return canvas;
+
+} // end of ringPaint
+
+
+
+
+
+
 
 function paint() {
   // read game state
@@ -56,7 +296,7 @@ function paint() {
 
   const w = canvas.width; //window.innerWidth;
   const h = canvas.height; //window.innerHeight;
-
+  const scale = document.getElementById('canvas').scale;
   // define element locations
   const loclocs = document.getElementById('canvas').loclocs;
   const postlocs = [...loclocs].slice(0,10); // .sort(([x,y],[u,v]) => v-y)
@@ -88,8 +328,23 @@ function paint() {
   undoColor(undoloc); //(postIdx)
   //
   for (let post of posts) {
-    postPaint(post);
+    //const postlocs = document.getElementById('canvas');
+    const [x,y] = postlocs[post.id];
+    for (let ring of post.rings) {
+      let img = (ring === post.top) ? textRingImages[ring.code] : ringImages[ring.code];
+      if (post.id !== flags.selectedPost) {
+        stomp({ // this is a stamp
+          x: x - img.width/2,
+          y: y - img.height/2, // backout bc canvas in corner not center
+          theta: 0, //Math.random()*3.14, //todo
+          scale: {x:1, y:1},
+          img: img,
+        }
+        , ctx);
+      }
+    }
   }
+
   for (let post of batterys) {
     batteryPaint(post);
   }
@@ -106,100 +361,20 @@ function paint() {
   //flip(ctx, moonstrip); // flip(ctx, moonstrip, loops=1, frame=0)
 
 
-
-
-
-
-
-
-
-
-
-  function postPaint(post){// one rad 14 ring is rad w/6 on screen = screen is 3 rings wide
-    const moons = [];
-    const scale = w/6/14;
-    const [x,y] = postlocs[post.id];
-
-    if (post.id !== flags.selectedPost) {
-    for (let ring of post.rings) {
-      let radiuso = ring.rank * scale;
-      let radiusi = 0; //(ring.rank < 5);// ? 0 : 3 * scale; // 3-ring is size of num-ring
-
-      let linedmoon = { // this is a stamp
-        x: x - radiuso, //centerd +
-        y: y - radiuso, //space at top +
-        theta: 0, //Math.random()*3.14, //todo
-        scale: {x:1, y:1},
-        path: linefillpath(ctx, ring, scale),
-        style: linefillstyle(ctx, ring, post), //rgbaString([10,10,10], a=0.2)
-      };
-
-      let moon = { // this is a stamp
-        x: x, //centerd +
-        y: y, //space at top +
-        theta: 0, //Math.random()*3.14, //todo
-        scale: {x:1, y:1},
-        path: circlePath(radiuso, radiusi),
-        style: ringstyle(ctx, ring, post), //rgbaString([10,10,10], a=0.2)
-        text: {
-          msg: (ring === post.top) ? ring.rank : "",  //textpips.chinese[ring.rank] : "",
-          pt: "32px ", font: "myFont",
-          textAlign: "center" || "right",
-          textBaseline: "middle" || "alphabetic" || "top",
-          color: suitlinecode[ring.suit],
-          x: 0, y: 3,
-        }
-      };
-
-      let moonhole = { // this is a stamp
-        x: x, //centerd +
-        y: y, //space at top +
-        theta: 0, //Math.random()*3.14, //todo
-        scale: {x:1, y:1},
-        path: circlePath(radiuso, radiusi),
-      };
-
-      moons.push([moon,moonhole,linedmoon]);
-    }
-    }
-    for (let [moon, moonhole, linepip] of moons) {
-      ctx.save();
-      stencil(moonhole, ctx);
-      //stomp(linepip, ctx);
-      ctx.restore();
-      stomp(moon, ctx);
-    }
-  } // end of postPaint
-
   function rabbits(post) {
     const rabbits = [];
     const scale = w/6/14;
     const [x,y] = loclocs[post.id];
     if (post.rings.length > 0) {
       post.rings.forEach((ring,i) => {
+        let img = textRingImages[ring.code];
         let moon = { // this is a stamp
-          x: x, //centerd +
-          y: y + i * 2.2 * scale,
+          x: x - img.width/2,
+          y: y + i * 2.2 * scale - img.height/2, // backout bc canvas in corner not center
           theta: 0, //Math.random()*3.14, //todo
           scale: {x:1, y:1},
-          path: circlePath(ring.rank * scale),
-          style: ringstyle(ctx, ring, post), //rgbaString([10,10,10], a=0.2)
-          text: {
-            msg: ring.rank, //(ring === post.top) ? ring.rank : "",  //textpips.chinese[ring.rank] : "",
-            pt: "32px ", font: "myFont",
-            textAlign: "center" || "right",
-            textBaseline: "middle" || "alphabetic" || "top",
-            color: suitlinecode[ring.suit],
-            x: 0, y: 0,
-          }
-        };
-        let rabbit = { // this is a stamp
-          x: x, //centerd +
-          y: y, //so to put the text in the fn middle
-          theta: 0,
-          scale: {x:1, y:1},
-          path: false,
-          style: false,
+          img: img,
+          /*
           text: {
             msg: "" + ring.rank,
             pt: "32px ", font: "myFont",
@@ -209,6 +384,7 @@ function paint() {
             x: w/12, //ring.rank * scale || 0,
             y: (post.rings.length - i - 1) * 3 * scale,
           },
+          */
         };
         rabbits.push(moon); //if (ring.up && ring.rings) rabbits.push(rabbit);
       });
