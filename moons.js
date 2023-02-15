@@ -49,23 +49,23 @@ function ringstyle(ctx, ring, post) {
   );
 }
 const thinringstyle = (ctx, ring) => genericStyle(...[
-    rgbaString([0,0,0],0.3), // fill,
+    rgbaString([0,0,0],0.2), // fill,
     suitlinecode[ring.suit], // line
-    1,
+    2,
 ]);
 
 const polygonstyle = (ctx, ring) => genericStyle(...[
-    rgbaString([0,0,0],0.3), //darksuitfillcode[ring.color],
+    rgbaString([0,0,0],0.0), //darksuitfillcode[ring.color],
     suitlinecode[ring.suit],
-    3,
+    6,
 ]);
 const linefillstyle = (ctx, ring) => genericStyle(...[ // style(fillcolor, linecolor, linewidth)
-    rgbaString([0,0,0],0.7), //darksuitfillcode[ring.color],
+    rgbaString([0,0,0],0.5), //darksuitfillcode[ring.color],
     suitlinecode[ring.suit],
-    1,
+    2,
 ]);
 const pipstyle = (ctx, ring) => genericStyle(...[
-    rgbaString([0,0,0],0.3), //darksuitfillcode[ring.color],
+    rgbaString([0,0,0],0.0), //darksuitfillcode[ring.color],
     suitlinecode[ring.suit],
     2,
 ]);
