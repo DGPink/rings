@@ -32,10 +32,10 @@ function canvasInit() {
   const canvas = document.getElementById('canvas');
   const ctx = canvas.getContext('2d', {alpha: false});
   ctx.canvas.width  = 1080; //screen.width;
-  ctx.canvas.height = 2 * 1080; // screen.width; //screen.height; //todo
+  ctx.canvas.height = 2700; // screen.width; //screen.height; //todo
   // save post locations to canvas for later retrieve by "touch"
-  canvas.loclocs = hexiful(canvas.width/6, canvas.width/2, canvas.width/6);
-  canvas.scale = canvas.width/6/14 // one rad 14 ring is rad w/6 on screen = screen is 3 rings wide
+  canvas.loclocs = hexiful(canvas.width/5, canvas.width/2, canvas.width/6);
+  canvas.scale = canvas.width/5/13 // one rad 14 ring is rad w/6 on screen = screen is 3 rings wide
 };
 
 function paintInit(rings) {
@@ -88,16 +88,16 @@ function stars(ring){ //pip pattern-maker
     //style: ringstyle(ctx, ring), //rgbaString([10,10,10], a=0.2)
     text: {
       msg: "" + ring.suit,
-      pt: "12px ", font: "myFont",
-      textAlign: "center" || "right",
-      textBaseline: "middle" || "alphabetic" || "top",
+      pt: "14px ", font: "myFont",
+      textAlign: "left" || "center" || "right",
+      textBaseline:"top" || "alphabetic" ||  "middle" ,
       color: suitlinecode[ring.suit],
-      x: 6, //ring.rank * scale || 0,
-      y: 6,
+      x: 0, //ring.rank * scale || 0,
+      y: 0,
     },
   };
 
-  ctx.fillStyle = squarepattern(piptext, 12, 12);
+  ctx.fillStyle = squarepattern(piptext, 12, 24);
   ctx.fillRect(0,0,canvas.width,canvas.height);
 
 
@@ -165,7 +165,7 @@ function polygonPaint(ring){
     //style: ringstyle(ctx, ring), //rgbaString([10,10,10], a=0.2)
     text: {
       msg: "" + ring.rank,
-      pt: "32px ", font: "myFont",
+      pt: "60px ", font: "myFont",
       textAlign: "center" || "right",
       textBaseline: "middle" || "alphabetic" || "top",
       color: suitlinecode[ring.suit],
@@ -242,7 +242,7 @@ function ringPaint(ring){
     style: ringstyle(ctx, ring), //rgbaString([10,10,10], a=0.2)
     text: {
       msg: "" + ring.rank,
-      pt: "32px ", font: "myFont",
+      pt: "40px ", font: "myFont",
       textAlign: "center" || "right",
       textBaseline: "middle" || "alphabetic" || "top",
       color: suitlinecode[ring.suit],
