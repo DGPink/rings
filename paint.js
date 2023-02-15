@@ -69,7 +69,7 @@ function stars(ring){ //pip pattern-maker
   const [x,y] = [whth/2, whth/2];
   let radiuso = ring.rank * scale;
   let radiusi = 0;
-/*
+
   const pippattern = { // this is a stamp
     x: 0,
     y: 0,
@@ -78,7 +78,7 @@ function stars(ring){ //pip pattern-maker
     path: suitpathcode[ring.suit],
     style: pipstyle(ctx, ring), //rgbaString([10,10,10], a=0.2)
   };
-  */
+
   let piptext = { // this is a stamp
     x: 0,
     y: 0,
@@ -97,7 +97,7 @@ function stars(ring){ //pip pattern-maker
     },
   };
 
-  ctx.fillStyle = squarepattern(piptext, 12, 24);
+  ctx.fillStyle = squarepattern(pippattern, 120, 200);
   ctx.fillRect(0,0,canvas.width,canvas.height);
 
 
@@ -124,7 +124,7 @@ function stars(ring){ //pip pattern-maker
 function polygonPaint(ring){
   // initiate canvas
   const scale = document.getElementById('canvas').scale; //canvas.width/6/14;
-  const whth = 2 * ring.rank * scale + 2;
+  const whth = 2 * ring.rank * scale * 2;
   const canvas = new OffscreenCanvas(whth, whth);
   const ctx = canvas.getContext('2d', {alpha: true});
   const moons = [];
