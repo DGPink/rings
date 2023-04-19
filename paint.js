@@ -170,7 +170,7 @@ function polygonPaint(ring){
       textBaseline: "middle" || "alphabetic" || "top",
       color: suitlinecode[ring.suit],
       x: 0, //ring.rank * scale || 0,
-      y: 0,
+      y: 4,
     },
   };
 
@@ -189,7 +189,7 @@ function polygonPaint(ring){
 function ringPaint(ring){
   // initiate canvas
   const scale = document.getElementById('canvas').scale; //canvas.width/6/14;
-  const whth = 2 * (ring.rank * scale + 2);
+  const whth = 2 * (ring.rank * scale + 8);
   const canvas = new OffscreenCanvas(whth, whth);
   const ctx = canvas.getContext('2d', {alpha: true});
   const moons = [];
@@ -402,7 +402,7 @@ function paint() {
   // batterys
   function batteryPaint(post){// one rad 14 ring is rad w/6 on screen = screen is 3 rings wide
     const moons = [];
-    const scale = w/6/14;
+    //const scale = w/6/14;
     const [x,y] = batterylocs[post.id];
 
     for (let ring of post.rings) {
