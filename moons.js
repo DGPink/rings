@@ -37,10 +37,10 @@ function genericStyle(fillcolor, linecolor, linewidth) {
 
 function ringstyle(ctx, ring, post) {
   //let index = post.rings.findLastIndex((e) => e.code === ring.code);
-  let ringthick =  3; //(ring === post.top) ? 6 : 3;
+  let ringthick =  4; //(ring === post.top) ? 6 : 3;
   // 4 + 2 * (1/2) ** (post.rings.length - index); //post.ord === flags.selectedPost &&
   return genericStyle(...[
-    rgbaString([0,0,0],0.25),//(ring === post.top) ? rgbaString[[0,0,0],0.3] : "black", //fillcolor
+    rgbaString([0,0,0],0.1),//(ring === post.top) ? rgbaString[[0,0,0],0.3] : "black", //fillcolor
     suitlinecode[ring.suit], //linecolor
     //3, //notesfromthepost(post,ring)//8,
     ringthick,
@@ -51,13 +51,13 @@ function ringstyle(ctx, ring, post) {
 const thinringstyle = (ctx, ring) => genericStyle(...[
     rgbaString([0,0,0],0.2), // fill,
     suitlinecode[ring.suit], // line
-    2,
+    4,
 ]);
 
 const polygonstyle = (ctx, ring) => genericStyle(...[
     rgbaString([0,0,0],0.0), //darksuitfillcode[ring.color],
     suitlinecode[ring.suit],
-    6,
+    8,
 ]);
 const linefillstyle = (ctx, ring) => genericStyle(...[ // style(fillcolor, linecolor, linewidth)
     rgbaString([0,0,0],0.5), //darksuitfillcode[ring.color],
@@ -96,10 +96,12 @@ function polygonPath(ctx, whth, radiuso, rank) { // //(ctx, ring, scale)
   if ( rank < 2 ) {
     return pippath
   }
-  pippath.moveTo (whth/2 + radiuso * Math.cos(0), whth/2 +  radiuso *  Math.sin(0));
+
+  let pha = 2*Math.PI * (0/rank + 1/rank/2);
+  pippath.moveTo (whth/2 + radiuso * Math.sin(pha) + Math.PI/rank, whth/2 +  radiuso *  Math.cos(pha));
   for (var i = 1; i < rank; i += 1) {
-    let pha = 2*Math.PI * i/rank;
-    pippath.lineTo (whth/2 + radiuso * Math.cos(pha), whth/2 + radiuso * Math.sin(pha));
+    pha = 2*Math.PI * (i/rank + 1/rank/2);
+    pippath.lineTo (whth/2 + radiuso * Math.sin(pha), whth/2 + radiuso * Math.cos(pha));
   }
   pippath.closePath();
 

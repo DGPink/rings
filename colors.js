@@ -55,7 +55,7 @@ const mornsun = "pink"; //TODO
 const noonsun = "yellow"; //TODO
 const evensun = "#f9cb9c"; //TODO
 const cloudcolor = rgbaString([245,255,255],1);
-const background = rgbaString([10,20,20], 1);
+const background = rgbaString([0,0,0], 1);
 
 const tubecolor = () => rgbaString([195,210,210].map(e => rndjnk(e)), 1);
 
